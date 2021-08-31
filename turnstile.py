@@ -4,6 +4,19 @@ import operator
 
 from collections import defaultdict
 
+# TODO: Figure this out
+def condition_switcher(condition, cur_enter_person, cur_exit_person, last_person_direction, time):
+    switcher = {
+        0: (cur_exit_person == [] and cur_enter_person != [] and cur_enter_person[1] == time) or (cur_exit_person != [] and cur_enter_person != [] and cur_enter_person[1] == time and cur_enter_person[1] < cur_exit_person[1]),
+        1: (cur_enter_person == [] and cur_exit_person != [] and cur_exit_person[1] == time) or (cur_exit_person != [] and cur_enter_person != [] and cur_exit_person[1] == time and cur_exit_person[1] < cur_enter_person[1]),
+        2: cur_exit_person != [] and cur_enter_person != [] and cur_enter_person[1] == cur_exit_person[1] == time and (last_person_direction == -1 or last_person_direction == 1),
+        3: cur_exit_person != [] and cur_enter_person != [] and cur_enter_person[1] == cur_exit_person[1] == time and last_person_direction == 0,
+        4: cur_exit_person != [] and cur_enter_person != [] and cur_exit_person[1] > time < cur_enter_person[1] and cur_exit_person[1] - time <= cur_enter_person[1] - time or cur_exit_person != [] and cur_exit_person[1] > time and cur_enter_person == [],
+        5: cur_exit_person != [] and cur_enter_person != [] and cur_exit_person[1] > time < cur_enter_person[1] and cur_enter_person[1] - time <= cur_exit_person[1] - time or cur_enter_person != [] and cur_enter_person[1] > time and cur_exit_person == [],
+        6: cur_exit_person != [] and cur_exit_person[1] < time,
+        7: cur_enter_person != [] and cur_enter_person[1] < time
+    }
+    return switcher.get(condition, False)
 
 def get_condition(cur_enter_person, cur_exit_person, last_person_direction, time):
     if (cur_exit_person == [] and cur_enter_person[1] == time) or (cur_exit_person != [] and cur_enter_person != [] and cur_enter_person[1] == time and cur_enter_person[1] < cur_exit_person[1]):
@@ -12,23 +25,23 @@ def get_condition(cur_enter_person, cur_exit_person, last_person_direction, time
     if (cur_enter_person == [] and cur_exit_person[1] == time) or (cur_exit_person != [] and cur_enter_person != [] and cur_exit_person[1] == time and cur_exit_person[1] < cur_enter_person[1]):
         return 1
 
-    if cur_exit_person != [] and cur_enter_person != [] and cur_enter_person[1] == cur_exit_person[1] == time:
-        if last_person_direction == -1 or last_person_direction == 1:
-            return 2
-        else:
-            return 3
-
-    if cur_exit_person != [] and cur_exit_person[1] < time:
-        return 4
-
-    if cur_enter_person != [] and cur_enter_person[1] < time:
-        return 5
+    if cur_exit_person != [] and cur_enter_person != [] and cur_enter_person[1] == cur_exit_person[1] == time and (last_person_direction == -1 or last_person_direction == 1):
+        return 2
+    
+    if cur_exit_person != [] and cur_enter_person != [] and cur_enter_person[1] == cur_exit_person[1] == time and last_person_direction == 0:
+        return 3
 
     if cur_exit_person != [] and cur_enter_person != [] and cur_exit_person[1] > time < cur_enter_person[1] and cur_exit_person[1] - time <= cur_enter_person[1] - time or cur_exit_person != [] and cur_exit_person[1] > time and cur_enter_person == []:
         return 6
 
     if cur_exit_person != [] and cur_enter_person != [] and cur_exit_person[1] > time < cur_enter_person[1] and cur_enter_person[1] - time <= cur_exit_person[1] - time or cur_enter_person != [] and cur_enter_person[1] > time and cur_exit_person == []:
         return 7
+    
+    if cur_exit_person != [] and cur_exit_person[1] < time:
+        return 4
+
+    if cur_enter_person != [] and cur_enter_person[1] < time:
+        return 5
 
     return -1
 
@@ -57,42 +70,40 @@ def solution(times, directions):
 
         prev_dir = -1 if output == [] or output[-1][1] != time - 1 else output[-1][2]
 
-        condition = get_condition(in_time, out_time, prev_dir, time)
-
-        if condition == 0:
+        if condition_switcher(0, in_time, out_time, prev_dir, time):
             output.append(in_time)
             in_time = [] if in_queue == [] else in_queue.pop(0)
 
-        if condition == 1:
+        if condition_switcher(1, in_time, out_time, prev_dir, time):
             output.append(out_time)
             out_time = [] if out_queue == [] else out_queue.pop(0)
 
-        if condition == 2:
+        if condition_switcher(2, in_time, out_time, prev_dir, time):
             in_time[1] = time + 1
             output.append(out_time)
             out_time = [] if out_queue == [] else out_queue.pop(0)
 
-        if condition == 3:
+        if condition_switcher(3, in_time, out_time, prev_dir, time):
             out_time[1] = time + 1
             output.append(in_time)
             in_time = [] if in_queue == [] else in_queue.pop(0)
-
-        if condition == 4:
-            out_time[1] = time
-            continue
-
-        if condition == 5:
-            in_time[1] = time
-            continue
-
-        if condition == 6:
+        
+        if condition_switcher(4, in_time, out_time, prev_dir, time):
             time += 1
             time = out_time[1]
             continue
 
-        if condition == 7:
+        if condition_switcher(5, in_time, out_time, prev_dir, time):
             time += 1
             time = in_time[1]
+            continue
+        
+        if condition_switcher(6, in_time, out_time, prev_dir, time):
+            out_time[1] = time
+            continue
+
+        if condition_switcher(7, in_time, out_time, prev_dir, time):
+            in_time[1] = time
             continue
 
         time += 1
@@ -102,7 +113,6 @@ def solution(times, directions):
     flatten = [sublist[1] for sublist in sorted_list]
 
     return flatten
-
 
 class test(unittest.TestCase):
     def test_one(self):
