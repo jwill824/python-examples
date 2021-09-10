@@ -31,8 +31,8 @@ import unittest
 def flatlandSpaceStations(n, c):
     c.sort()
     _max = max(c[0], n - 1 - c[-1])
-    for i in range(len(c) - 1):
-        _max = max((c[i + 1] - c[i]) // 2, _max)
+    for m in range(len(c) - 1):
+        _max = max((c[m + 1] - c[m]) // 2, _max)
     return _max
 
 class test(unittest.TestCase):
