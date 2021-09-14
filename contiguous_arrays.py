@@ -92,8 +92,8 @@ class test(unittest.TestCase):
         self.assertEqual(["/start", "/green", "/blue", "/pink", "/register", "/orange", "/one/two"], findContiguousHistory1(user0, user0))
         
     def test_four(self):
-        user0 = "abcde"
-        user1 = "acdef"
+        user0 = list("abcde")
+        user1 = list("acdef")
         self.assertEqual(["c", "d", "e"], findContiguousHistory1(user0, user1))
 
 if __name__ == '__main__':

@@ -13,7 +13,7 @@ class ListNode:
 def addTwoNumbers(l1: ListNode, l2: ListNode, c=0):
     val = l1.val + l2.val + c
     c = val // 10
-    ret = ListNode(val % 10) 
+    ret = ListNode(val % 10)
     
     if (l1.next or l2.next or c != 0):
         if l1.next == None:
