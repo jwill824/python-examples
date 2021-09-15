@@ -38,8 +38,8 @@ Interview Preparation Kit > Arrays
 ## Interviews
 
 * City Traffic - Ordermark (Other)
-* Contiguous Arrays - Indeed (Karat virtual assignment)
-* Domain Clicks - Indeed (Karat virtual assignment)
+* Contiguous Arrays - Indeed (Karat virtual pair assignment)
+* Domain Clicks - Indeed (Karat virtual pair assignment)
 * Reverse a String - Toast (HackerRank virtual pair assignment)
 * Reverse a Sentence - Toast (HackerRank virtual pair assignment)
 * Shortest Distance - Whitespace (Attached take-home assignment)
