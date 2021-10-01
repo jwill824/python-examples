@@ -30,7 +30,7 @@ class Graph:
         if len(self.nodes[src]) > 1:
             prev_dist = curr_dist
             
-        self.shift_neighbors()
+        # self.shift_neighbors()
         
         for neighbor in self.nodes[src]:
             if curr_dist > min_dist:
