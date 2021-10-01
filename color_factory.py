@@ -1,6 +1,6 @@
 import random
 
-def getNonConsecutiveRepeatedColor(compare_color, random_color):
+def getNonConsecutiveRepeatedColor(colors, compare_color, random_color):
     if compare_color == random_color:
         while compare_color == random_color:
             random_color = random.choice(colors)
@@ -14,16 +14,14 @@ def colorFactory(n: int):
         random_color = random.choice(colors)
         
         if i > 0:
-            random_color = getNonConsecutiveRepeatedColor(factory[i - 1], random_color)
+            random_color = getNonConsecutiveRepeatedColor(colors, factory[i - 1], random_color)
         
         if i > 4:
             for j in range(len(factory)):
                 last_two = factory[i-2:i]
                 next_pair = factory[j-2:j]
                 if j > 1 and next_pair == last_two:
-                    next_color = factory[j]
-                    while next_color == random_color:
-                        random_color = getNonConsecutiveRepeatedColor(next_color, random_color)
+                    random_color = getNonConsecutiveRepeatedColor(colors, factory[j], random_color)
                         
         factory.append(random_color)
     
